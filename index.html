@@ -633,8 +633,8 @@ async function submitAssessment() {
 function renderResult(data) {
   document.getElementById('r-overall').textContent = data.overall ?? '—';
   document.getElementById('r-avgs').innerHTML =
-    'Product-Market Price Fit: <strong>' + (data.pmpAvg ?? '—') + '</strong>' +
-    ' &nbsp;|&nbsp; Sales Operating System: <strong>' + (data.sosAvg ?? '—') + '</strong>';
+    'Product-Market Power (PMP): <strong>' + (data.pmpAvg ?? '—') + '</strong>' +
+    ' &nbsp;|&nbsp; Sales Organization Strength (SOS): <strong>' + (data.sosAvg ?? '—') + '</strong>';
   document.getElementById('r-priority-title').textContent = data.topPriorityLabel ?? '';
   document.getElementById('r-inbox').innerHTML =
     'The full breakdown across all 10 dimensions — including where you stand vs. peers — ' +
