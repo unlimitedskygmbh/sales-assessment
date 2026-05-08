@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Maturity Assessment · Unlimited Sky</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #F0F5F5;
+  color: #2C2C34;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px 64px;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  max-width: 560px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+}
+.header {
+  background: #12434E;
+  padding: 24px;
+  text-align: center;
+}
+.header-brand {
+  color: #36B69F;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+.header-sub {
+  color: rgba(255,255,255,0.45);
+  font-size: 12px;
+  margin-top: 4px;
+}
+.body { padding: 32px 28px; }
+
+/* ── INTRO ── */
+.intro-title {
+  font-size: 21px;
+  font-weight: 700;
+  color: #12434E;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.intro-sub {
+  font-size: 13px;
+  color: #8A9FAA;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+.intro-badges {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.badge {
+  background: #F0F8F6;
+  border: 1px solid #DFE9E7;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #117789;
+  font-weight: 600;
+}
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8A9FAA;
+  margin-bottom: 6px;
+}
+input, select {
+  width: 100%;
+  border: 1.5px solid #DFE9E7;
+  border-radius: 7px;
+  padding: 11px 13px;
+  font-size: 14px;
+  color: #2C2C34;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+  margin-bottom: 18px;
+}
+input:focus, select:focus { border-color: #36B69F; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-70%);
+  color: #8A9FAA;
+  pointer-events: none;
+  font-size: 13px;
+}
+
+/* ── PROGRESS ── */
+.progress-wrap { margin-bottom: 24px; }
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #8A9FAA;
+  margin-bottom: 8px;
+}
+.progress-track {
+  height: 4px;
+  background: #DFE9E7;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 4px;
+  background: #36B69F;
+  border-radius: 2px;
+  transition: width 0.35s ease;
+}
+
+/* ── QUESTION ── */
+.q-text {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #12434E;
+  margin-bottom: 20px;
+}
+.options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.option {
+  border: 1.5px solid #DFE9E7;
+  border-radius: 8px;
+  padding: 13px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  line-height: 1.5;
+  color: #2C2C34;
+  user-select: none;
+}
+.option:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.option.selected {
+  border-color: #36B69F;
+  background: #EBF8F5;
+  font-weight: 600;
+  color: #12434E;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+}
+.btn-primary { background: #117789; color: #fff; }
+.btn-primary:hover { background: #0F6678; }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-back {
+  background: none;
+  border: none;
+  color: #8A9FAA;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 10px 0 0;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+.btn-back:hover { color: #2C2C34; }
+
+/* ── LOADING ── */
+.loading-wrap { text-align: center; padding: 48px 0; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 4px solid #DFE9E7;
+  border-top-color: #36B69F;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: #8A9FAA; font-size: 13px; }
+
+/* ── RESULT ── */
+.result-score-box {
+  background: #EBF7F4;
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.result-score-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8A9FAA;
+  margin-bottom: 10px;
+}
+.result-score-num {
+  font-size: 60px;
+  font-weight: 800;
+  color: #117789;
+  line-height: 1;
+}
+.result-score-denom {
+  font-size: 28px;
+  color: #8A9FAA;
+  font-weight: 400;
+}
+.result-avgs {
+  font-size: 12px;
+  color: #8A9FAA;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+.result-avgs strong { color: #2C2C34; }
+.result-priority {
+  background: #12434E;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.result-priority-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #36B69F;
+  margin-bottom: 7px;
+}
+.result-priority-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.result-priority-body {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.65;
+}
+.result-inbox {
+  text-align: center;
+  padding: 12px 4px 20px;
+  font-size: 13px;
+  color: #8A9FAA;
+  line-height: 1.65;
+}
+.result-inbox strong { color: #2C2C34; }
+.btn-book {
+  display: block;
+  background: #117789;
+  color: #fff;
+  text-align: center;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 15px;
+  border-radius: 8px;
+}
+.btn-book:hover { background: #0F6678; }
+
+/* ── FOOTER ── */
+.footer {
+  background: #F5F7F7;
+  padding: 14px;
+  text-align: center;
+  font-size: 11px;
+  color: #8A9FAA;
+}
+
+[hidden] { display: none !important; }
+
+@media (max-width: 420px) {
+  .body { padding: 24px 18px; }
+  .row-2 { grid-template-columns: 1fr; gap: 0; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-brand">UNLIMITED SKY</div>
+    <div class="header-sub">Sales Maturity Assessment</div>
+  </div>
+
+  <!-- VIEW: INTRO -->
+  <div id="view-intro">
+    <div class="body">
+      <p class="intro-title">3-Minute Sales Health Check</p>
+      <p class="intro-sub">10 scenario questions. Instant score. Find out exactly where your sales engine stands — and what to fix first.</p>
+      <div class="intro-badges">
+        <span class="badge">⏱ 3 minutes</span>
+        <span class="badge">10 questions</span>
+        <span class="badge">Free · No strings</span>
+      </div>
+
+      <div class="row-2">
+        <div>
+          <label class="field-label" for="f-name">First Name *</label>
+          <input id="f-name" type="text" placeholder="Max">
+        </div>
+        <div>
+          <label class="field-label" for="f-company">Company *</label>
+          <input id="f-company" type="text" placeholder="Acme GmbH">
+        </div>
+      </div>
+
+      <label class="field-label" for="f-email">Work Email * &nbsp;<span style="font-weight:400;text-transform:none;letter-spacing:0">(results sent here)</span></label>
+      <input id="f-email" type="email" placeholder="you@company.com">
+
+      <label class="field-label" for="f-stage">Funding Stage *</label>
+      <div class="select-wrap">
+        <select id="f-stage">
+          <option value="">Select your current stage</option>
+          <option value="Pre-Seed">Pre-Seed</option>
+          <option value="Seed">Seed</option>
+          <option value="Series A">Series A</option>
+          <option value="Series B">Series B</option>
+          <option value="Series C">Series C+</option>
+          <option value="Bootstrapped">Bootstrapped</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary" id="btn-start">Start the Assessment →</button>
+      <p style="font-size:11px;color:#8A9FAA;text-align:center;margin-top:14px;line-height:1.6">
+        Your results are sent to your inbox. No spam — ever.
+      </p>
+    </div>
+  </div>
+
+  <!-- VIEW: QUESTION -->
+  <div id="view-question" hidden>
+    <div class="body">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="q-label">Question 1 of 10</span>
+          <span id="q-pct">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="q-bar" style="width:0%"></div>
+        </div>
+      </div>
+      <p class="q-text" id="q-text"></p>
+      <div class="options" id="q-options"></div>
+      <button class="btn btn-primary" id="btn-next" disabled>Next →</button>
+      <button class="btn-back" id="btn-back">← Back</button>
+    </div>
+  </div>
+
+  <!-- VIEW: LOADING -->
+  <div id="view-loading" hidden>
+    <div class="body">
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <p class="loading-text">Calculating your score…</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: RESULT -->
+  <div id="view-result" hidden>
+    <div class="body">
+      <div class="result-score-box">
+        <div class="result-score-label">Your Sales Maturity Score</div>
+        <div>
+          <span class="result-score-num" id="r-overall">—</span>
+          <span class="result-score-denom"> / 5</span>
+        </div>
+        <div class="result-avgs" id="r-avgs"></div>
+      </div>
+
+      <div class="result-priority">
+        <div class="result-priority-tag">Your #1 Priority Right Now</div>
+        <div class="result-priority-title" id="r-priority-title"></div>
+        <div class="result-priority-body" style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;margin-top:6px">
+          What to do about it is waiting in your inbox.
+        </div>
+      </div>
+
+      <p class="result-inbox" id="r-inbox"></p>
+
+      <a class="btn-book"
+         href="https://cal.com/berndkuhnle/60mins-to-nextlevel"
+         target="_blank"
+         rel="noopener">
+        Book your 60-minute deep-dive with Bernd →
+      </a>
+    </div>
+  </div>
+
+  <div class="footer">Unlimited Sky · Wingman for Startup founders</div>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const WEBHOOK_URL = 'https://unlimitedsky.app.n8n.cloud/webhook/sma-submission';
+
+// ─── QUESTIONS ────────────────────────────────────────────────────────────────
+// Labels and option text must contain the exact substrings the Score Calculator
+// uses to match answers. Do not change the text without also updating n8n.
+const questions = [
+  {
+    label: 'When you hear about a company that looks like a great fit, what do you do?',
+    options: [
+      'Reach out and let them know we might be a good fit — move fast',
+      'Check the basics first: website, LinkedIn, company size',
+      'Run them through our ICP checklist before reaching out',
+      'Score them against our full qualification framework before any outreach'
+    ]
+  },
+  {
+    label: 'A prospect tells you they are evaluating a competitor. How do you respond?',
+    options: [
+      'Walk through our product and explain why it is better',
+      'Give a standard answer covering our key differentiators',
+      'Tailor the response to their specific situation and context',
+      'Deliver persona-specific proof points and matched reference cases'
+    ]
+  },
+  {
+    label: 'A prospect asks for a quote on the very first call. What do you do?',
+    options: [
+      'We are still figuring it out — pricing varies a lot',
+      'We share the price list we follow',
+      'We share tiered pricing aligned to the value delivered at each tier',
+      'Price is value-based - derived from what the solution is worth to them'
+    ]
+  },
+  {
+    label: 'You just lost a deal you were confident about. What is your next move?',
+    options: [
+      'Accept it and focus on the next opportunity',
+      'Talk through what happened informally with the team',
+      'Run a structured debrief using a standard template',
+      'Full post-mortem with documented findings fed back into the process'
+    ]
+  },
+  {
+    label: 'Your goal is to win your next 10 customers. How do you approach it?',
+    options: [
+      'We rely on founder relationships and warm intros',
+      'Manual outreach to a handpicked list',
+      'Structured outbound with defined sequences and target personas',
+      'We run a multi-channel engine with data enrichment and intent signals'
+    ]
+  },
+  {
+    label: 'It is the 15th of the month. How confident are you in your revenue forecast?',
+    options: [
+      'Hard to say — it shifts constantly',
+      'We have a rough sense based on recent conversations',
+      'We track pipeline stages and can give a reasonable forecast',
+      'We run a weighted pipeline forecast updated every week'
+    ]
+  },
+  {
+    label: 'Someone new joins tomorrow on the sales team. What does onboarding look like?',
+    options: [
+      'They shadow calls and figure it out as they go',
+      'We get them up to speed in the first two weeks',
+      'We run a 30-60-90 day onboarding plan with clear milestones',
+      'Structured certification program before they carry their own quota'
+    ]
+  },
+  {
+    label: 'A key customer only hit 70% of last year\'s performance. How do you handle it?',
+    options: [
+      'We haven\'t calculated churn or contraction in detail',
+      'We handle it reactively when it surfaces',
+      'We track NRR and have expansion playbooks for at-risk accounts',
+      'NRR is a board-level metric — we run dedicated programs for retention and expansion'
+    ]
+  },
+  {
+    label: 'How did you set your revenue target for next year?',
+    options: [
+      'We picked an ambitious number the team could rally around',
+      'We based it on last year\'s number plus a reasonable growth rate',
+      'We built it bottom-up from pipeline capacity and headcount',
+      'We modeled it from funnel conversion rates, market size, and capacity'
+    ]
+  },
+  {
+    label: 'Your top seller resigns tomorrow. What happens to your revenue?',
+    options: [
+      'Revenue takes a serious hit — they carry most of the pipeline',
+      'Challenging but manageable — we would cope',
+      'Disruptive but survivable — our systems and process would hold',
+      'Minimal impact — our process is documented and pipeline is fully visible'
+    ]
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let currentQ    = 0;
+let selections  = new Array(10).fill(null);
+let userInfo    = {};
+
+// ─── VIEWS ────────────────────────────────────────────────────────────────────
+function show(id) {
+  ['view-intro','view-question','view-loading','view-result'].forEach(v => {
+    document.getElementById(v).hidden = (v !== id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── INTRO ────────────────────────────────────────────────────────────────────
+document.getElementById('btn-start').addEventListener('click', () => {
+  const name    = document.getElementById('f-name').value.trim();
+  const company = document.getElementById('f-company').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const stage   = document.getElementById('f-stage').value;
+
+  if (!name || !company || !email || !stage) {
+    alert('Please fill in all fields to continue.');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  userInfo = { name, company, email, stage };
+  currentQ = 0;
+  renderQuestion(0);
+  show('view-question');
+});
+
+// ─── QUESTIONS ────────────────────────────────────────────────────────────────
+function renderQuestion(i) {
+  const q   = questions[i];
+  const pct = Math.round((i / 10) * 100);
+
+  document.getElementById('q-label').textContent = `Question ${i + 1} of 10`;
+  document.getElementById('q-pct').textContent   = pct + '%';
+  document.getElementById('q-bar').style.width   = pct + '%';
+  document.getElementById('q-text').textContent  = q.label;
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.textContent = (i === 9) ? 'See My Score →' : 'Next →';
+  nextBtn.disabled    = selections[i] === null;
+
+  const container = document.getElementById('q-options');
+  container.innerHTML = '';
+  q.options.forEach((text, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (selections[i] === idx ? ' selected' : '');
+    div.textContent = text;
+    div.addEventListener('click', () => {
+      selections[i] = idx;
+      container.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      div.classList.add('selected');
+      nextBtn.disabled = false;
+    });
+    container.appendChild(div);
+  });
+}
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  if (currentQ < 9) {
+    currentQ++;
+    renderQuestion(currentQ);
+  } else {
+    submitAssessment();
+  }
+});
+
+document.getElementById('btn-back').addEventListener('click', () => {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion(currentQ);
+  } else {
+    show('view-intro');
+  }
+});
+
+// ─── SUBMIT ───────────────────────────────────────────────────────────────────
+async function submitAssessment() {
+  show('view-loading');
+
+  // Build FormRobin-compatible payload — matches what the Score Calculator expects
+  const responses = [
+    { form_field_label: 'First name',             value: userInfo.name },
+    { form_field_label: 'Email address',           value: userInfo.email },
+    { form_field_label: 'Company name',            value: userInfo.company },
+    { form_field_label: 'Current funding stage',   value: userInfo.stage },
+  ];
+  questions.forEach((q, i) => {
+    responses.push({ form_field_label: q.label, value: q.options[selections[i]] });
+  });
+
+  const payload = {
+    id: 'web_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    form_field_responses: responses
+  };
+
+  try {
+    const res  = await fetch(WEBHOOK_URL, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload)
+    });
+    const data = await res.json();
+    renderResult(data);
+  } catch (err) {
+    console.error(err);
+    alert('Something went wrong submitting your assessment. Please try again.');
+    show('view-intro');
+  }
+}
+
+// ─── RESULT ───────────────────────────────────────────────────────────────────
+function renderResult(data) {
+  document.getElementById('r-overall').textContent = data.overall ?? '—';
+  document.getElementById('r-avgs').innerHTML =
+    'Product-Market Power (PMP): <strong>' + (data.pmpAvg ?? '—') + '</strong>' +
+    ' &nbsp;|&nbsp; Sales Organization Strength (SOS): <strong>' + (data.sosAvg ?? '—') + '</strong>';
+  document.getElementById('r-priority-title').textContent = data.topPriorityLabel ?? '';
+  document.getElementById('r-inbox').innerHTML =
+    'The full breakdown across all 10 dimensions — including where you stand vs. peers — ' +
+    'is on its way to <strong>' + (data.firstName || userInfo.name) + '</strong> at ' +
+    '<strong>' + userInfo.email + '</strong>. Check your inbox.';
+  show('view-result');
+}
+</script>
+</body>
+</html>
