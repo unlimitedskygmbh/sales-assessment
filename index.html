@@ -721,18 +721,18 @@ function renderResult(data) {
 
   // category breakdown
   const avgsEl = document.getElementById('r-avgs');
-  if (data.categories && typeof data.categories === 'object') {
+  if (data.pmpAvg !== undefined && data.sosAvg !== undefined) {
+    avgsEl.innerHTML = `<strong>PMP</strong> ${Number(data.pmpAvg).toFixed(1)} &nbsp;·&nbsp; <strong>SOS</strong> ${Number(data.sosAvg).toFixed(1)}`;
+  } else if (data.categories && typeof data.categories === 'object') {
     avgsEl.innerHTML = Object.entries(data.categories)
       .map(([k, v]) => `<strong>${k}</strong>: ${Number(v).toFixed(1)}`)
       .join(' &nbsp;·&nbsp; ');
-  } else if (data.category_scores) {
-    avgsEl.textContent = data.category_scores;
   } else {
     avgsEl.textContent = '';
   }
 
   // priority area
-  const priority = data.priority_area || data.priority || 'Your Sales System';
+  const priority = data.topPriorityLabel || data.priority_area || data.priority || 'Your Sales System';
   document.getElementById('r-priority-title').textContent = priority;
 
   // inbox message
