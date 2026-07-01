@@ -360,10 +360,21 @@ input:focus, select:focus { border-color: #36B69F; }
   cursor: pointer;
 }
 .consent-row input[type="checkbox"] {
-  width: auto;
+  /* Override the generic input{} rule above (appearance:none/width:100%) which was
+     silently stripping the checkbox's native box + checkmark rendering - the click
+     was toggling .checked correctly, it just never showed visually. */
+  appearance: auto;
+  -webkit-appearance: checkbox;
+  width: 16px;
+  height: 16px;
   margin: 2px 0 0;
+  padding: 0;
+  border: initial;
+  border-radius: initial;
+  background: initial;
   flex-shrink: 0;
   accent-color: #36B69F;
+  cursor: pointer;
 }
 .consent-row span {
   font-size: 11px;
