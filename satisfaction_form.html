@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback · unlimited sky</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #F0F5F5;
+  color: #2C2C34;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px 16px 64px;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  max-width: 720px;
+  width: 100%;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+}
+.accent-bar { background: #D6DA24; height: 6px; }
+.header {
+  background: #12434E;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.header-titles { text-align: left; }
+.header-brand {
+  color: #36B69F;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+.header-sub {
+  color: rgba(255,255,255,0.45);
+  font-size: 12px;
+  margin-top: 3px;
+}
+.lang-toggle { display: flex; gap: 4px; flex-shrink: 0; }
+.lang-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.65);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.lang-btn:hover { color: #fff; }
+.lang-btn.active { background: #36B69F; border-color: #36B69F; color: #12434E; }
+.body { padding: 30px 28px; }
+
+/* ── INTRO ── */
+.intro-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #12434E;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.intro-sub {
+  font-size: 13.5px;
+  color: #8A9FAA;
+  line-height: 1.65;
+  margin-bottom: 22px;
+}
+.intro-badges { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.badge {
+  background: #F0F8F6;
+  border: 1px solid #DFE9E7;
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #117789;
+  font-weight: 600;
+}
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8A9FAA;
+  margin-bottom: 6px;
+}
+.field-hint {
+  font-size: 12px;
+  color: #8A9FAA;
+  margin: -2px 0 10px;
+  line-height: 1.5;
+}
+input, select, textarea {
+  width: 100%;
+  border: 1.5px solid #DFE9E7;
+  border-radius: 7px;
+  padding: 11px 13px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #2C2C34;
+  outline: none;
+  transition: border-color 0.15s;
+  background: #fff;
+  margin-bottom: 16px;
+}
+select { appearance: none; -webkit-appearance: none; }
+textarea { min-height: 84px; resize: vertical; line-height: 1.55; }
+input:focus, select:focus, textarea:focus { border-color: #36B69F; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 13px;
+  top: 20px;
+  color: #8A9FAA;
+  pointer-events: none;
+  font-size: 13px;
+}
+
+/* ── SEGMENTED CONTEXT CHOICE ── */
+.ctx-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.ctx-option {
+  border: 1.5px solid #DFE9E7;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  line-height: 1.5;
+  user-select: none;
+}
+.ctx-option:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.ctx-option.selected {
+  border-color: #36B69F;
+  background: #EBF8F5;
+  font-weight: 700;
+  color: #12434E;
+}
+
+/* ── MULTI SELECT ── */
+.multi-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.multi-option {
+  border: 1.5px solid #DFE9E7;
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.multi-option:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.multi-box {
+  width: 18px; height: 18px;
+  border: 1.5px solid #C3D5D2;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff; font-weight: 700;
+  transition: background 0.15s, border-color 0.15s;
+}
+.multi-option.selected { border-color: #36B69F; background: #EBF8F5; color: #12434E; font-weight: 600; }
+.multi-option.selected .multi-box { background: #36B69F; border-color: #36B69F; }
+
+/* ── PROGRESS ── */
+.progress-wrap { margin-bottom: 26px; }
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #8A9FAA;
+  margin-bottom: 8px;
+}
+.progress-track { height: 4px; background: #DFE9E7; border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 4px; background: #36B69F; border-radius: 2px; transition: width 0.35s ease; }
+
+/* ── SECTION ── */
+.section-title {
+  font-size: 19px;
+  font-weight: 700;
+  color: #12434E;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+.section-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #36B69F;
+  margin-bottom: 7px;
+}
+.section-sub { font-size: 13px; color: #8A9FAA; line-height: 1.6; margin-bottom: 24px; }
+
+/* ── QUESTION ── */
+.q { margin-bottom: 28px; }
+.q-stem {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #2C2C34;
+  margin-bottom: 12px;
+}
+.q-optional {
+  font-weight: 400;
+  color: #8A9FAA;
+  font-size: 12px;
+}
+
+/* ── SCALE 1-5 ── */
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+.scale-item {
+  border: 1.5px solid #DFE9E7;
+  border-radius: 8px;
+  padding: 10px 5px 9px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+.scale-item:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.scale-num { font-size: 17px; font-weight: 700; color: #117789; line-height: 1.2; }
+.scale-lbl { font-size: 10px; color: #8A9FAA; line-height: 1.35; margin-top: 4px; }
+.scale-item.selected { border-color: #36B69F; background: #EBF8F5; }
+.scale-item.selected .scale-num { color: #12434E; }
+.scale-item.selected .scale-lbl { color: #2C2C34; font-weight: 600; }
+
+/* ── CHOICE (3-way) ── */
+.choice-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.choice-item {
+  border: 1.5px solid #DFE9E7;
+  border-radius: 8px;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+  line-height: 1.4;
+}
+.choice-item:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.choice-item.selected { border-color: #36B69F; background: #EBF8F5; font-weight: 700; color: #12434E; }
+
+/* ── YES / NO ── */
+.yesno-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; max-width: 260px; }
+
+/* ── NPS 0-10 ── */
+.nps-row { display: grid; grid-template-columns: repeat(11, 1fr); gap: 5px; }
+.nps-item {
+  border: 1.5px solid #DFE9E7;
+  border-radius: 7px;
+  padding: 11px 2px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #117789;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+.nps-item:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.nps-item.selected { border-color: #36B69F; background: #36B69F; color: #fff; }
+.nps-anchors {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #8A9FAA;
+  margin-top: 7px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s;
+}
+.btn-primary { background: #117789; color: #fff; }
+.btn-primary:hover { background: #0F6678; }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-accent { background: #D6DA24; color: #12434E; }
+.btn-accent:hover { opacity: 0.88; }
+.btn-back {
+  background: none;
+  border: none;
+  color: #8A9FAA;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 12px 0 0;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+.btn-back:hover { color: #2C2C34; }
+
+/* ── CONSENT ── */
+.consent-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 4px 0 18px;
+  cursor: pointer;
+}
+.consent-row input[type="checkbox"] {
+  appearance: auto;
+  -webkit-appearance: checkbox;
+  width: 16px; height: 16px;
+  margin: 2px 0 0;
+  padding: 0;
+  border: initial; border-radius: initial; background: initial;
+  flex-shrink: 0;
+  accent-color: #36B69F;
+  cursor: pointer;
+}
+.consent-row span { font-size: 11.5px; line-height: 1.6; color: #8A9FAA; }
+.consent-row span a { color: #117789; }
+
+.err {
+  background: #FDF3F2;
+  border: 1px solid #F3CFCB;
+  color: #A4453C;
+  border-radius: 7px;
+  padding: 10px 13px;
+  font-size: 12.5px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* ── SESSION BANNER ── */
+.session-banner {
+  background: #F0F8F6;
+  border: 1px solid #CCE6E0;
+  border-left: 4px solid #36B69F;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.session-banner-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #36B69F;
+  margin-bottom: 5px;
+}
+.session-banner-title { font-size: 15px; font-weight: 700; color: #12434E; line-height: 1.4; }
+.session-banner-meta { font-size: 12.5px; color: #8A9FAA; margin-top: 3px; }
+.session-banner-clear {
+  background: none;
+  border: none;
+  color: #8A9FAA;
+  font-size: 11.5px;
+  font-family: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 8px 0 0;
+}
+.session-banner-clear:hover { color: #2C2C34; }
+
+/* ── HINT under a question ── */
+.q-hint {
+  font-size: 12px;
+  color: #8A9FAA;
+  line-height: 1.6;
+  margin: -6px 0 12px;
+}
+
+/* ── SINGLE CHECKBOX ── */
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  border: 1.5px solid #DFE9E7;
+  border-radius: 8px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+}
+.check-row:hover { border-color: #8ACFC2; background: #F7FCFB; }
+.check-row.selected { border-color: #36B69F; background: #EBF8F5; }
+.check-box {
+  width: 19px; height: 19px;
+  border: 1.5px solid #C3D5D2;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #fff; font-weight: 700;
+  margin-top: 1px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.check-row.selected .check-box { background: #36B69F; border-color: #36B69F; }
+.check-label { font-size: 14px; line-height: 1.5; color: #2C2C34; }
+.check-row.selected .check-label { font-weight: 600; color: #12434E; }
+
+/* ── CONDITIONAL REVEAL ── */
+.q-conditional {
+  border-left: 3px solid #DFE9E7;
+  padding-left: 16px;
+  margin-left: 4px;
+}
+
+/* ── LOADING ── */
+.loading-wrap { text-align: center; padding: 56px 0; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 4px solid #DFE9E7;
+  border-top-color: #36B69F;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: #8A9FAA; font-size: 13px; }
+
+/* ── THANKS ── */
+.thanks-wrap { text-align: center; padding: 40px 8px 46px; }
+.thanks-mark {
+  width: 60px; height: 60px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: #EBF8F5;
+  color: #36B69F;
+  font-size: 30px;
+  line-height: 60px;
+  font-weight: 700;
+}
+.thanks-title { font-size: 20px; font-weight: 700; color: #12434E; margin-bottom: 12px; line-height: 1.35; }
+.thanks-body { font-size: 13.5px; color: #8A9FAA; line-height: 1.7; max-width: 420px; margin: 0 auto; }
+
+/* ── FOOTER ── */
+.footer {
+  background: #F5F7F7;
+  padding: 14px;
+  text-align: center;
+  font-size: 11px;
+  color: #8A9FAA;
+}
+
+[hidden] { display: none !important; }
+
+@media (max-width: 560px) {
+  .body { padding: 24px 18px; }
+  .row-2 { grid-template-columns: 1fr; gap: 0; }
+  .scale { grid-template-columns: 1fr; gap: 6px; }
+  .scale-item { display: flex; align-items: center; gap: 11px; text-align: left; padding: 11px 14px; }
+  .scale-lbl { margin-top: 0; font-size: 12.5px; }
+  .choice-row { grid-template-columns: 1fr; }
+  .nps-row { grid-template-columns: repeat(6, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- Only ever shown when the URL carries test=1. Deliberately loud: a
+       participant who somehow scanned a test QR must be able to tell at a
+       glance that this is not the real thing. -->
+  <div id="test-strip" hidden style="background:#D6DA24;color:#12434E;padding:9px 16px;font-size:12px;font-weight:700;letter-spacing:0.04em;text-align:center;">
+    TEST MODE - this submission does not count
+  </div>
+
+  <div class="accent-bar"></div>
+  <div class="header">
+    <div class="header-titles">
+      <div class="header-brand" id="h-brand">unlimited sky</div>
+      <div class="header-sub" id="h-sub">Your feedback</div>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="de">DE</button>
+    </div>
+  </div>
+
+  <!-- VIEW: INTRO -->
+  <div id="view-intro">
+    <div class="body">
+      <p class="intro-title" id="i-title"></p>
+      <p class="intro-sub" id="i-sub"></p>
+      <div class="intro-badges">
+        <span class="badge" id="i-b1"></span>
+        <span class="badge" id="i-b2"></span>
+        <span class="badge" id="i-b3"></span>
+      </div>
+
+      <div id="i-err" class="err" hidden></div>
+
+      <div class="session-banner" id="session-banner" hidden>
+        <div class="session-banner-label" id="sb-label"></div>
+        <div class="session-banner-title" id="sb-title"></div>
+        <div class="session-banner-meta" id="sb-meta"></div>
+        <button class="session-banner-clear" id="sb-clear"></button>
+      </div>
+
+      <div id="manual-fields">
+        <label class="field-label" id="l-context"></label>
+        <div class="ctx-options" id="ctx-options"></div>
+
+        <label class="field-label" id="l-company" for="f-company"></label>
+        <input id="f-company" type="text" autocomplete="organization">
+      </div>
+
+      <!-- Separate from the manual block: a retainer session knows the client
+           but not which period the feedback covers, so the date is still asked
+           even though everything else is settled. -->
+      <div id="date-field">
+        <label class="field-label" id="l-date" for="f-date"></label>
+        <input id="f-date" type="date">
+      </div>
+
+      <div class="row-2">
+        <div>
+          <label class="field-label" id="l-name" for="f-name"></label>
+          <input id="f-name" type="text" autocomplete="name">
+        </div>
+        <div>
+          <label class="field-label" id="l-email" for="f-email"></label>
+          <input id="f-email" type="email" autocomplete="email">
+        </div>
+      </div>
+
+      <label class="field-label" id="l-role" for="f-role"></label>
+      <div class="select-wrap">
+        <select id="f-role"></select>
+      </div>
+
+      <label class="consent-row" for="f-consent">
+        <input type="checkbox" id="f-consent">
+        <span id="l-consent"></span>
+      </label>
+
+      <button class="btn btn-accent" id="btn-start"></button>
+    </div>
+  </div>
+
+  <!-- VIEW: STEP (all survey sections render here) -->
+  <div id="view-step" hidden>
+    <div class="body">
+      <div class="progress-wrap">
+        <div class="progress-meta">
+          <span id="s-label"></span>
+          <span id="s-pct">0%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="s-bar" style="width:0%"></div></div>
+      </div>
+      <div id="s-kicker" class="section-kicker" hidden></div>
+      <div id="s-title" class="section-title"></div>
+      <div id="s-sub" class="section-sub" hidden></div>
+      <div id="s-err" class="err" hidden></div>
+      <div id="s-content"></div>
+      <button class="btn btn-primary" id="btn-next"></button>
+      <button class="btn-back" id="btn-back"></button>
+    </div>
+  </div>
+
+  <!-- VIEW: LOADING -->
+  <div id="view-loading" hidden>
+    <div class="body">
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <p class="loading-text" id="ld-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: THANKS -->
+  <div id="view-thanks" hidden>
+    <div class="body">
+      <div class="thanks-wrap">
+        <div class="thanks-mark">✓</div>
+        <div class="thanks-title" id="t-title"></div>
+        <div class="thanks-body" id="t-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer" id="f-text">unlimited sky</div>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const WEBHOOK_URL = 'https://unlimitedsky.app.n8n.cloud/webhook/satisfaction-submission';
+
+// ─── SURVEY (BUILD:GENERATED, DO NOT HAND-EDIT) ──────────────────────────────
+// Source of truth: content/satisfaction-questions.json (version 2026-08-18c).
+// Regenerated by scripts/build-satisfaction-form.js - do not hand-edit this block.
+// Carries both language variants; the EN/DE toggle switches at runtime with
+// no refetch, so a respondent can flip language mid-survey without losing answers.
+const SURVEY = {
+  "version": "2026-08-18c",
+  "languages": [
+    "en",
+    "de"
+  ],
+  "defaultLanguage": "en",
+  "dimLabels": {
+    "relevance": {
+      "en": "Relevance",
+      "de": "Relevanz"
+    },
+    "clarity": {
+      "en": "Clarity",
+      "de": "Verständlichkeit"
+    },
+    "practice": {
+      "en": "Practice value",
+      "de": "Übungswert"
+    },
+    "facilitation": {
+      "en": "Facilitation",
+      "de": "Moderation"
+    },
+    "materials": {
+      "en": "Materials & logistics",
+      "de": "Material & Organisation"
+    },
+    "confidenceBefore": {
+      "en": "Confidence before",
+      "de": "Sicherheit vorher"
+    },
+    "confidenceAfter": {
+      "en": "Confidence after",
+      "de": "Sicherheit nachher"
+    },
+    "impact": {
+      "en": "Business impact",
+      "de": "Wirkung im Geschäft"
+    },
+    "priorities": {
+      "en": "Prioritisation",
+      "de": "Priorisierung"
+    },
+    "preparation": {
+      "en": "Preparation",
+      "de": "Vorbereitung"
+    },
+    "responsiveness": {
+      "en": "Responsiveness",
+      "de": "Erreichbarkeit"
+    },
+    "challenge": {
+      "en": "Challenge",
+      "de": "Widerspruch"
+    },
+    "followThrough": {
+      "en": "Follow-through",
+      "de": "Nachverfolgung"
+    },
+    "value": {
+      "en": "Value for money",
+      "de": "Preis-Leistung"
+    },
+    "nps": {
+      "en": "Recommendation",
+      "de": "Weiterempfehlung"
+    }
+  },
+  "scale5": {
+    "en": [
+      "Strongly disagree",
+      "Disagree",
+      "Neutral",
+      "Agree",
+      "Strongly agree"
+    ],
+    "de": [
+      "Trifft gar nicht zu",
+      "Trifft eher nicht zu",
+      "Teils/teils",
+      "Trifft eher zu",
+      "Trifft voll zu"
+    ]
+  },
+  "ui": {
+    "brand": {
+      "en": "unlimited sky",
+      "de": "unlimited sky"
+    },
+    "headerSub": {
+      "en": "Your feedback",
+      "de": "Dein Feedback"
+    },
+    "introTitle": {
+      "en": "How did that land?",
+      "de": "Wie ist das angekommen?"
+    },
+    "introSub": {
+      "en": "Five minutes of honest feedback shapes the next session more than anything else I have. There are no trick questions here - the parts that did not work are the useful ones.",
+      "de": "Fünf Minuten ehrliches Feedback prägen die nächste Session stärker als alles andere. Hier gibt es keine Fangfragen - die Stellen, die nicht funktioniert haben, sind die nützlichen."
+    },
+    "badgeTime": {
+      "en": "5 min",
+      "de": "5 Min."
+    },
+    "badgeAnon": {
+      "en": "Name optional",
+      "de": "Name optional"
+    },
+    "badgeCandid": {
+      "en": "Candid is useful",
+      "de": "Ehrlich ist hilfreich"
+    },
+    "labelContext": {
+      "en": "What are you giving feedback on? *",
+      "de": "Worauf bezieht sich dein Feedback? *"
+    },
+    "optWorkshop": {
+      "en": "A workshop or training day",
+      "de": "Workshop oder Trainingstag"
+    },
+    "optRetainer": {
+      "en": "An ongoing retainer / sparring engagement",
+      "de": "Laufendes Retainer- / Sparring-Mandat"
+    },
+    "labelCompany": {
+      "en": "Company *",
+      "de": "Unternehmen *"
+    },
+    "labelDateWorkshop": {
+      "en": "Workshop date *",
+      "de": "Datum des Workshops *"
+    },
+    "labelDateRetainer": {
+      "en": "Period this feedback covers *",
+      "de": "Zeitraum, auf den sich das Feedback bezieht *"
+    },
+    "labelName": {
+      "en": "Name (optional)",
+      "de": "Name (optional)"
+    },
+    "labelEmail": {
+      "en": "Email (optional - only if you want a reply)",
+      "de": "E-Mail (optional - nur falls du eine Antwort möchtest)"
+    },
+    "labelRole": {
+      "en": "Your role (optional)",
+      "de": "Deine Rolle (optional)"
+    },
+    "roleOptions": {
+      "en": [
+        "",
+        "Founder / CEO",
+        "Sales lead / CCO",
+        "Account Executive / Sales rep",
+        "Customer Success",
+        "Marketing",
+        "Other"
+      ],
+      "de": [
+        "",
+        "Gründer / CEO",
+        "Vertriebsleitung / CCO",
+        "Account Executive / Vertrieb",
+        "Customer Success",
+        "Marketing",
+        "Sonstiges"
+      ]
+    },
+    "labelModules": {
+      "en": "Which modules did you take part in? *",
+      "de": "An welchen Modulen hast du teilgenommen? *"
+    },
+    "modulesHint": {
+      "en": "Select all that apply - you will be asked about each one.",
+      "de": "Mehrfachauswahl - zu jedem gewählten Modul folgen Fragen."
+    },
+    "consentText": {
+      "en": "I agree that unlimited sky may store and process this feedback to improve its workshops and advisory work. If I leave my name or email, I can withdraw this consent at any time by emailing <a href=\"mailto:bernd.kuhnle@unlimitedsky.de\">bernd.kuhnle@unlimitedsky.de</a>. See the <a href=\"https://unlimitedsky.de/privacy-policy/\" target=\"_blank\" rel=\"noopener\">Privacy Policy</a>. *",
+      "de": "Ich bin damit einverstanden, dass unlimited sky dieses Feedback speichert und verarbeitet, um Workshops und Beratung zu verbessern. Wenn ich Name oder E-Mail angebe, kann ich diese Einwilligung jederzeit per E-Mail an <a href=\"mailto:bernd.kuhnle@unlimitedsky.de\">bernd.kuhnle@unlimitedsky.de</a> widerrufen. Siehe <a href=\"https://unlimitedsky.de/privacy-policy/\" target=\"_blank\" rel=\"noopener\">Datenschutzerklärung</a>. *"
+    },
+    "btnStart": {
+      "en": "Start",
+      "de": "Starten"
+    },
+    "btnNext": {
+      "en": "Next",
+      "de": "Weiter"
+    },
+    "btnBack": {
+      "en": "Back",
+      "de": "Zurück"
+    },
+    "btnSubmit": {
+      "en": "Send my feedback",
+      "de": "Feedback senden"
+    },
+    "btnSkip": {
+      "en": "Skip",
+      "de": "Überspringen"
+    },
+    "progressOf": {
+      "en": "of",
+      "de": "von"
+    },
+    "sending": {
+      "en": "Sending your feedback...",
+      "de": "Feedback wird gesendet..."
+    },
+    "thanksTitle": {
+      "en": "Thank you - that is genuinely useful.",
+      "de": "Vielen Dank - das ist wirklich hilfreich."
+    },
+    "thanksBody": {
+      "en": "Every answer goes straight into how the next session gets built. If you left your email and asked for a follow-up, you will hear from me within two working days.",
+      "de": "Jede Antwort fließt direkt in die Gestaltung der nächsten Session ein. Wenn du deine E-Mail hinterlassen und um Rückmeldung gebeten hast, melde ich mich innerhalb von zwei Arbeitstagen."
+    },
+    "errorGeneric": {
+      "en": "Something went wrong sending your feedback. Please try again.",
+      "de": "Beim Senden ist etwas schiefgelaufen. Bitte versuche es erneut."
+    },
+    "errorRequired": {
+      "en": "Please complete the required fields.",
+      "de": "Bitte fülle die Pflichtfelder aus."
+    },
+    "footer": {
+      "en": "unlimited sky",
+      "de": "unlimited sky"
+    },
+    "sessionConfirm": {
+      "en": "Feedback on",
+      "de": "Feedback zu"
+    },
+    "sessionChange": {
+      "en": "Not the right session? Clear it and enter the details yourself.",
+      "de": "Falsche Session? Zurücksetzen und Angaben selbst eintragen."
+    },
+    "sessionCleared": {
+      "en": "Session cleared - please enter company and date below.",
+      "de": "Session zurückgesetzt - bitte Unternehmen und Datum unten eintragen."
+    }
+  },
+  "modules": [
+    {
+      "id": "awareness",
+      "label": {
+        "en": "Awareness Journey",
+        "de": "Awareness Journey"
+      }
+    },
+    {
+      "id": "discovery",
+      "label": {
+        "en": "Customer Discovery",
+        "de": "Customer Discovery"
+      }
+    },
+    {
+      "id": "negotiation",
+      "label": {
+        "en": "Negotiation",
+        "de": "Verhandlung"
+      }
+    },
+    {
+      "id": "icp",
+      "label": {
+        "en": "Ideal Customer Profile",
+        "de": "Ideal Customer Profile"
+      }
+    },
+    {
+      "id": "stakeholder",
+      "label": {
+        "en": "Stakeholder Mapping",
+        "de": "Stakeholder Mapping"
+      }
+    }
+  ],
+  "moduleQuestions": [
+    {
+      "id": "relevance",
+      "dim": "relevance",
+      "type": "scale5",
+      "stem": {
+        "en": "{module}: this addressed a problem I actually have in my deals.",
+        "de": "{module}: Das Modul hat ein Problem adressiert, das ich in meinen Deals tatsächlich habe."
+      }
+    },
+    {
+      "id": "clarity",
+      "dim": "clarity",
+      "type": "scale5",
+      "stem": {
+        "en": "{module}: the method was explained clearly enough that I could apply it on Monday.",
+        "de": "{module}: Die Methode wurde so klar erklärt, dass ich sie am Montag anwenden könnte."
+      }
+    },
+    {
+      "id": "practice",
+      "dim": "practice",
+      "type": "scale5",
+      "stem": {
+        "en": "{module}: I got enough practice - not just theory - to make it stick.",
+        "de": "{module}: Ich hatte genug Übung - nicht nur Theorie - damit es hängen bleibt."
+      }
+    },
+    {
+      "id": "takeaway",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "{module}: name one thing from this module you will use.",
+        "de": "{module}: Nenne eine Sache aus diesem Modul, die du nutzen wirst."
+      },
+      "placeholder": {
+        "en": "In my next call I will...",
+        "de": "In meinem nächsten Gespräch werde ich..."
+      }
+    }
+  ],
+  "workshopQuestions": [
+    {
+      "id": "ws_facilitation",
+      "dim": "facilitation",
+      "type": "scale5",
+      "stem": {
+        "en": "The room worked - people spoke up, and the discussion went somewhere.",
+        "de": "Die Atmosphäre hat funktioniert - es wurde offen gesprochen und die Diskussion hat etwas gebracht."
+      }
+    },
+    {
+      "id": "ws_materials",
+      "dim": "materials",
+      "type": "scale5",
+      "stem": {
+        "en": "Materials and organisation worked: pre-information, handouts, room setup, timing.",
+        "de": "Material und Organisation haben funktioniert: Vorabinfos, Unterlagen, Raum, Zeitplan."
+      }
+    },
+    {
+      "id": "ws_pace",
+      "type": "choice",
+      "stem": {
+        "en": "The pace of the day was:",
+        "de": "Das Tempo des Tages war:"
+      },
+      "choices": {
+        "en": [
+          "Too slow",
+          "About right",
+          "Too fast"
+        ],
+        "de": [
+          "Zu langsam",
+          "Genau richtig",
+          "Zu schnell"
+        ]
+      }
+    },
+    {
+      "id": "ws_balance",
+      "type": "choice",
+      "stem": {
+        "en": "The balance between input and exercises was:",
+        "de": "Das Verhältnis von Input und Übungen war:"
+      },
+      "choices": {
+        "en": [
+          "Too much input",
+          "About right",
+          "Too much exercise"
+        ],
+        "de": [
+          "Zu viel Input",
+          "Genau richtig",
+          "Zu viel Übung"
+        ]
+      }
+    },
+    {
+      "id": "ws_conf_before",
+      "dim": "confidenceBefore",
+      "type": "scale5",
+      "stem": {
+        "en": "Thinking back to the morning: how confident were you applying these methods BEFORE the workshop?",
+        "de": "Rückblickend auf den Morgen: Wie sicher warst du in der Anwendung dieser Methoden VOR dem Workshop?"
+      },
+      "scaleOverride": {
+        "en": [
+          "Not at all",
+          "A little",
+          "Somewhat",
+          "Confident",
+          "Very confident"
+        ],
+        "de": [
+          "Gar nicht",
+          "Wenig",
+          "Etwas",
+          "Sicher",
+          "Sehr sicher"
+        ]
+      }
+    },
+    {
+      "id": "ws_conf_after",
+      "dim": "confidenceAfter",
+      "type": "scale5",
+      "stem": {
+        "en": "And how confident are you NOW?",
+        "de": "Und wie sicher bist du JETZT?"
+      },
+      "scaleOverride": {
+        "en": [
+          "Not at all",
+          "A little",
+          "Somewhat",
+          "Confident",
+          "Very confident"
+        ],
+        "de": [
+          "Gar nicht",
+          "Wenig",
+          "Etwas",
+          "Sicher",
+          "Sehr sicher"
+        ]
+      }
+    },
+    {
+      "id": "ws_best",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "What was the single most valuable part of the day?",
+        "de": "Was war der wertvollste Teil des Tages?"
+      },
+      "placeholder": {
+        "en": "The part I would keep is...",
+        "de": "Was ich behalten würde..."
+      }
+    },
+    {
+      "id": "ws_cut",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "What would you cut, shorten, or change?",
+        "de": "Was würdest du streichen, kürzen oder ändern?"
+      },
+      "placeholder": {
+        "en": "I would drop or change...",
+        "de": "Ich würde streichen oder ändern..."
+      }
+    },
+    {
+      "id": "ws_missing",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "What did you expect that you did not get?",
+        "de": "Was hast du erwartet, aber nicht bekommen?"
+      },
+      "placeholder": {
+        "en": "I came in expecting...",
+        "de": "Ich bin hergekommen und habe erwartet..."
+      }
+    }
+  ],
+  "retainerQuestions": [
+    {
+      "id": "rt_impact",
+      "dim": "impact",
+      "type": "scale5",
+      "stem": {
+        "en": "The sparring moved our commercial results, not just our thinking.",
+        "de": "Das Sparring hat unsere kommerziellen Ergebnisse bewegt, nicht nur unser Denken."
+      }
+    },
+    {
+      "id": "rt_priorities",
+      "dim": "priorities",
+      "type": "scale5",
+      "stem": {
+        "en": "We work on the right things - the priorities we set are the ones that matter.",
+        "de": "Wir arbeiten an den richtigen Dingen - die gesetzten Prioritäten sind die relevanten."
+      }
+    },
+    {
+      "id": "rt_preparation",
+      "dim": "preparation",
+      "type": "scale5",
+      "stem": {
+        "en": "Bernd comes prepared and knows where we left off.",
+        "de": "Bernd kommt vorbereitet und weiß, wo wir stehengeblieben sind."
+      }
+    },
+    {
+      "id": "rt_responsiveness",
+      "dim": "responsiveness",
+      "type": "scale5",
+      "stem": {
+        "en": "Support between the calls (Slack, WhatsApp, email) is there when we need it.",
+        "de": "Die Unterstützung zwischen den Calls (Slack, WhatsApp, E-Mail) ist da, wenn wir sie brauchen."
+      }
+    },
+    {
+      "id": "rt_challenge",
+      "dim": "challenge",
+      "type": "scale5",
+      "stem": {
+        "en": "I get challenged enough. I am not just being agreed with.",
+        "de": "Ich werde ausreichend hinterfragt. Mir wird nicht nur zugestimmt."
+      }
+    },
+    {
+      "id": "rt_followthrough",
+      "dim": "followThrough",
+      "type": "scale5",
+      "stem": {
+        "en": "Recaps and next steps are clear, and they actually get followed up.",
+        "de": "Zusammenfassungen und nächste Schritte sind klar - und werden auch nachgehalten."
+      }
+    },
+    {
+      "id": "rt_value",
+      "dim": "value",
+      "type": "scale5",
+      "stem": {
+        "en": "Given what we pay, this engagement is worth it.",
+        "de": "Gemessen an dem, was wir zahlen, lohnt sich dieses Mandat."
+      }
+    },
+    {
+      "id": "rt_cadence",
+      "type": "choice",
+      "stem": {
+        "en": "The cadence of our sessions is:",
+        "de": "Die Taktung unserer Sessions ist:"
+      },
+      "choices": {
+        "en": [
+          "Too infrequent",
+          "About right",
+          "Too frequent"
+        ],
+        "de": [
+          "Zu selten",
+          "Genau richtig",
+          "Zu häufig"
+        ]
+      }
+    },
+    {
+      "id": "rt_modules",
+      "type": "multi",
+      "optional": true,
+      "source": "modules",
+      "stem": {
+        "en": "Which of these topics have we actually worked on together? (optional)",
+        "de": "An welchen dieser Themen haben wir tatsächlich gemeinsam gearbeitet? (optional)"
+      }
+    },
+    {
+      "id": "rt_changed",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "What has changed in the business because of this engagement?",
+        "de": "Was hat sich im Unternehmen durch dieses Mandat verändert?"
+      },
+      "placeholder": {
+        "en": "Since we started...",
+        "de": "Seit wir angefangen haben..."
+      }
+    },
+    {
+      "id": "rt_differently",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "What should I do differently over the next three months?",
+        "de": "Was sollte ich in den nächsten drei Monaten anders machen?"
+      },
+      "placeholder": {
+        "en": "I would like you to...",
+        "de": "Ich würde mir wünschen, dass du..."
+      }
+    },
+    {
+      "id": "rt_missing",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "Is there anything you expected from this engagement that you have not received?",
+        "de": "Gibt es etwas, das du von diesem Mandat erwartet, aber nicht bekommen hast?"
+      },
+      "placeholder": {
+        "en": "I had expected...",
+        "de": "Ich hatte erwartet..."
+      }
+    }
+  ],
+  "closingQuestions": [
+    {
+      "id": "nps",
+      "dim": "nps",
+      "type": "nps",
+      "stem": {
+        "en": "How likely are you to recommend unlimited sky to another founder or sales leader?",
+        "de": "Wie wahrscheinlich würdest du unlimited sky einem anderen Gründer oder einer Vertriebsleitung weiterempfehlen?"
+      },
+      "anchorLow": {
+        "en": "Not at all likely",
+        "de": "Sehr unwahrscheinlich"
+      },
+      "anchorHigh": {
+        "en": "Extremely likely",
+        "de": "Sehr wahrscheinlich"
+      }
+    },
+    {
+      "id": "nps_why",
+      "type": "text",
+      "optional": true,
+      "stem": {
+        "en": "In your own words: what would you tell another founder or sales leader about working with unlimited sky?",
+        "de": "In deinen Worten: Was würdest du einem anderen Gründer oder einer Vertriebsleitung über die Zusammenarbeit mit unlimited sky sagen?"
+      },
+      "placeholder": {
+        "en": "What actually changed, and what I would tell someone considering it...",
+        "de": "Was sich wirklich verändert hat, und was ich jemandem sagen würde, der überlegt..."
+      }
+    },
+    {
+      "id": "testimonial_clearance",
+      "type": "check",
+      "optional": true,
+      "stem": {
+        "en": "unlimited sky may publish this statement.",
+        "de": "unlimited sky darf diese Aussage veröffentlichen."
+      },
+      "hint": {
+        "en": "Only the statement above. None of your ratings, and nothing else you wrote in this form, is ever published. Leave this unticked and the statement stays internal.",
+        "de": "Nur die Aussage oben. Keine deiner Bewertungen und nichts anderes aus diesem Formular wird jemals veröffentlicht. Ohne Haken bleibt die Aussage intern."
+      }
+    },
+    {
+      "id": "testimonial_name",
+      "type": "shorttext",
+      "optional": true,
+      "showIf": {
+        "id": "testimonial_clearance",
+        "equals": true
+      },
+      "stem": {
+        "en": "Name to publish it under (optional)",
+        "de": "Name, unter dem veröffentlicht werden darf (optional)"
+      },
+      "hint": {
+        "en": "Leave blank to be quoted anonymously, for example as \"an Account Executive at a European energy company\".",
+        "de": "Leer lassen, um anonym zitiert zu werden, etwa als \"Account Executive bei einem europäischen Energieunternehmen\"."
+      },
+      "placeholder": {
+        "en": "Alex Berger",
+        "de": "Alex Berger"
+      }
+    },
+    {
+      "id": "testimonial_company",
+      "type": "shorttext",
+      "optional": true,
+      "showIf": {
+        "id": "testimonial_clearance",
+        "equals": true
+      },
+      "stem": {
+        "en": "Company and role to publish (optional)",
+        "de": "Unternehmen und Rolle, die veröffentlicht werden dürfen (optional)"
+      },
+      "placeholder": {
+        "en": "Head of Sales, Acme GmbH",
+        "de": "Vertriebsleitung, Acme GmbH"
+      }
+    },
+    {
+      "id": "followup_wanted",
+      "type": "yesno",
+      "optional": true,
+      "stem": {
+        "en": "Would you like me to come back to you on anything you wrote here?",
+        "de": "Möchtest du, dass ich auf etwas zurückkomme, das du hier geschrieben hast?"
+      },
+      "choices": {
+        "en": [
+          "Yes",
+          "No"
+        ],
+        "de": [
+          "Ja",
+          "Nein"
+        ]
+      }
+    }
+  ]
+};
+// ─── END SURVEY ──────────────────────────────────────────────────────────────
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let lang = 'en';
+let context = null;              // 'workshop' | 'retainer'
+let selectedModules = [];        // module ids (workshop branch)
+let answers = {};                // { questionId: value }
+let steps = [];                  // built after intro
+let stepIdx = 0;
+const meta = {};
+
+// Session, when the respondent arrived via a session QR code.
+//
+// Everything here comes from that one URL and nothing else. The form never
+// fetches a session registry and no registry is compiled into this file: the
+// registry is private and lives only in the vault repo, where n8n reads it.
+// A respondent's browser therefore only ever learns about the single session
+// they attended, and one client can never see another client's name.
+//
+// The values below are display-only. n8n re-resolves `id` against the private
+// registry and that resolution, not this URL, is what lands in the ledger - so
+// a hand-edited URL cannot forge a company name into the record.
+let session = null;              // { id, company, date, context, modules[] }
+
+const $ = id => document.getElementById(id);
+const t = node => (node && (node[lang] ?? node.en)) || '';
+
+function show(viewId) {
+  ['view-intro', 'view-step', 'view-loading', 'view-thanks']
+    .forEach(v => { $(v).hidden = (v !== viewId); });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── LANGUAGE ─────────────────────────────────────────────────────────────────
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    lang = btn.dataset.lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b === btn));
+    document.documentElement.lang = lang;
+    renderIntro();
+    if (!$('view-step').hidden) { steps = buildSteps(); renderStep(); }
+  });
+});
+
+// ─── INTRO ────────────────────────────────────────────────────────────────────
+function renderIntro() {
+  const u = SURVEY.ui;
+  $('h-brand').textContent   = t(u.brand);
+  $('h-sub').textContent     = t(u.headerSub);
+  $('i-title').textContent   = t(u.introTitle);
+  $('i-sub').textContent     = t(u.introSub);
+  $('i-b1').textContent      = t(u.badgeTime);
+  $('i-b2').textContent      = t(u.badgeAnon);
+  $('i-b3').textContent      = t(u.badgeCandid);
+  $('l-context').textContent = t(u.labelContext);
+  $('l-company').textContent = t(u.labelCompany);
+  $('l-name').textContent    = t(u.labelName);
+  $('l-email').textContent   = t(u.labelEmail);
+  $('l-role').textContent    = t(u.labelRole);
+  $('l-consent').innerHTML   = t(u.consentText);
+  $('btn-start').textContent = t(u.btnStart);
+  $('f-text').textContent    = t(u.footer);
+  $('ld-text').textContent   = t(u.sending);
+  $('t-title').textContent   = t(u.thanksTitle);
+  $('t-body').textContent    = t(u.thanksBody);
+  $('l-date').textContent    = context === 'retainer' ? t(u.labelDateRetainer) : t(u.labelDateWorkshop);
+
+  // ── session banner vs manual entry ──
+  // With a session, company/date/context are known and the respondent is not
+  // asked to retype them - which is the whole point: eight people typing a
+  // company name three different ways would fragment one workshop into three
+  // in the ledger. Without a session, the manual fields come back.
+  const banner = $('session-banner');
+  if (session) {
+    banner.hidden = false;
+    $('manual-fields').hidden = true;
+    $('sb-label').textContent = t(u.sessionConfirm);
+    $('sb-title').textContent = session.company || session.id;
+    const bits = [];
+    if (session.date) bits.push(formatDate(session.date));
+    if (session.context) bits.push(t(session.context === 'retainer' ? u.optRetainer : u.optWorkshop));
+    $('sb-meta').textContent = bits.join(' · ');
+    $('sb-clear').textContent = t(u.sessionChange);
+  } else {
+    banner.hidden = true;
+    $('manual-fields').hidden = false;
+  }
+
+  // A workshop session carries its own date, so the field is settled and hidden.
+  // A retainer session does not - the client is known but which period this
+  // feedback covers is not, and that is the respondent's to say.
+  $('date-field').hidden = !!(session && session.date);
+
+  // role select
+  const roleSel = $('f-role');
+  const prevRole = roleSel.selectedIndex;
+  roleSel.innerHTML = '';
+  (u.roleOptions[lang] || u.roleOptions.en).forEach(r => {
+    const o = document.createElement('option');
+    o.value = r; o.textContent = r;
+    roleSel.appendChild(o);
+  });
+  if (prevRole > 0) roleSel.selectedIndex = prevRole;
+
+  // context options
+  const box = $('ctx-options');
+  box.innerHTML = '';
+  [['workshop', u.optWorkshop], ['retainer', u.optRetainer]].forEach(([key, label]) => {
+    const d = document.createElement('div');
+    d.className = 'ctx-option' + (context === key ? ' selected' : '');
+    d.textContent = t(label);
+    d.addEventListener('click', () => {
+      context = key;
+      renderIntro();
+    });
+    box.appendChild(d);
+  });
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString(lang === 'de' ? 'de-DE' : 'en-GB',
+    { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+$('sb-clear').addEventListener('click', () => {
+  session = null;
+  context = null;
+  selectedModules = [];
+  renderIntro();
+  const e = $('i-err');
+  e.textContent = t(SURVEY.ui.sessionCleared);
+  e.hidden = false;
+});
+
+$('btn-start').addEventListener('click', () => {
+  const errBox = $('i-err');
+  const consent = $('f-consent').checked;
+
+  const company = session ? (session.company || session.id) : $('f-company').value.trim();
+  // A workshop session carries its own date. A retainer session deliberately
+  // does not - the client is known, the period is not - so fall through to the
+  // field that renderIntro left visible for exactly this case.
+  const date    = (session && session.date) ? session.date : $('f-date').value;
+
+  // With a session the context and company are already settled; without one
+  // they are required. Date stays required either way - it is what ties a
+  // response to a specific delivery.
+  const missing = !consent || !company || !date || (!session && !context);
+  if (missing) {
+    errBox.textContent = t(SURVEY.ui.errorRequired);
+    errBox.hidden = false;
+    return;
+  }
+  errBox.hidden = true;
+
+  meta.context        = session ? session.context : context;
+  meta.company        = company;
+  meta.date           = date;
+  meta.sessionId      = session ? session.id : null;
+  meta.name           = $('f-name').value.trim();
+  meta.email          = $('f-email').value.trim();
+  meta.role           = $('f-role').value;
+  meta.consent        = true;
+  meta.consentGivenAt = new Date().toISOString();
+
+  context = meta.context;
+
+  // A session that declares which modules actually ran preselects them, so the
+  // respondent is never asked to rate a module that was not delivered.
+  if (session && Array.isArray(session.modules) && session.modules.length) {
+    selectedModules = session.modules.slice();
+  }
+
+  steps = buildSteps();
+  stepIdx = 0;
+  renderStep();
+  show('view-step');
+});
+
+// ─── STEP BUILDER ─────────────────────────────────────────────────────────────
+// A step is { kicker?, title, sub?, questions[], kind }.
+// The module-selection step is inserted only for the workshop branch, and the
+// per-module steps are rebuilt every time the selection changes.
+function buildSteps() {
+  const u = SURVEY.ui;
+  const out = [];
+
+  if (context === 'workshop') {
+    // The module picker only appears when the session did not already declare
+    // which modules ran. Scanning the QR from a session whose modules are known
+    // drops a whole step and removes the chance of someone rating a module they
+    // never sat in.
+    const modulesKnown = !!(session && Array.isArray(session.modules) && session.modules.length);
+    if (!modulesKnown) {
+      out.push({
+        kind: 'modules',
+        title: t(u.labelModules).replace(/\s*\*$/, ''),
+        sub: t(u.modulesHint),
+        questions: []
+      });
+    }
+
+    selectedModules.forEach(modId => {
+      const mod = SURVEY.modules.find(m => m.id === modId);
+      if (!mod) return;
+      out.push({
+        kind: 'module',
+        kicker: t(u.headerSub),
+        title: t(mod.label),
+        questions: SURVEY.moduleQuestions.map(q => ({
+          ...q,
+          id: 'mod_' + modId + '_' + q.id,
+          moduleId: modId,
+          dim: q.dim,
+          stemText: t(q.stem).replace('{module}: ', '').replace('{module}', t(mod.label)),
+          placeholderText: q.placeholder ? t(q.placeholder) : ''
+        }))
+      });
+    });
+
+    const wq = SURVEY.workshopQuestions;
+    out.push({
+      kind: 'block',
+      title: lang === 'de' ? 'Der Tag insgesamt' : 'The day overall',
+      questions: wq.slice(0, 4).map(prep)
+    });
+    out.push({
+      kind: 'block',
+      title: lang === 'de' ? 'Was hat sich verändert?' : 'What changed?',
+      questions: wq.slice(4).map(prep)
+    });
+
+  } else {
+    const rq = SURVEY.retainerQuestions;
+    out.push({
+      kind: 'block',
+      title: lang === 'de' ? 'Die Zusammenarbeit' : 'The working relationship',
+      questions: rq.slice(0, 8).map(prep)
+    });
+    out.push({
+      kind: 'block',
+      title: lang === 'de' ? 'Wirkung und Richtung' : 'Impact and direction',
+      questions: rq.slice(8).map(prep)
+    });
+  }
+
+  out.push({
+    kind: 'block',
+    title: lang === 'de' ? 'Zum Abschluss' : 'To close',
+    questions: SURVEY.closingQuestions.map(prep)
+  });
+
+  return out;
+}
+
+function prep(q) {
+  return {
+    ...q,
+    stemText: t(q.stem),
+    hintText: q.hint ? t(q.hint) : '',
+    placeholderText: q.placeholder ? t(q.placeholder) : ''
+  };
+}
+
+// ─── STEP RENDERER ────────────────────────────────────────────────────────────
+function renderStep() {
+  const u = SURVEY.ui;
+  const step = steps[stepIdx];
+  const total = steps.length;
+
+  $('s-label').textContent = (stepIdx + 1) + ' ' + t(u.progressOf) + ' ' + total;
+  const pct = Math.round((stepIdx / total) * 100);
+  $('s-pct').textContent = pct + '%';
+  $('s-bar').style.width = pct + '%';
+
+  $('s-kicker').textContent = step.kicker || '';
+  $('s-kicker').hidden = !step.kicker;
+  $('s-title').textContent = step.title;
+  $('s-sub').textContent = step.sub || '';
+  $('s-sub').hidden = !step.sub;
+  $('s-err').hidden = true;
+
+  $('btn-next').textContent = (stepIdx === total - 1) ? t(u.btnSubmit) : t(u.btnNext);
+  $('btn-back').textContent = t(u.btnBack);
+
+  const c = $('s-content');
+  c.innerHTML = '';
+
+  if (step.kind === 'modules') {
+    c.appendChild(renderModulePicker());
+  } else {
+    step.questions.filter(isVisible).forEach(q => c.appendChild(renderQuestion(q)));
+  }
+}
+
+function renderModulePicker() {
+  const wrap = document.createElement('div');
+  wrap.className = 'multi-options';
+  SURVEY.modules.forEach(mod => {
+    wrap.appendChild(multiRow(mod.id, t(mod.label), selectedModules, () => {
+      steps = buildSteps();
+      // stay on the module step, just refresh the picker below it
+      renderStep();
+    }));
+  });
+  return wrap;
+}
+
+function multiRow(value, label, arr, onChange) {
+  const d = document.createElement('div');
+  const on = () => arr.includes(value);
+  d.className = 'multi-option' + (on() ? ' selected' : '');
+  const box = document.createElement('span');
+  box.className = 'multi-box';
+  box.textContent = on() ? '✓' : '';
+  const txt = document.createElement('span');
+  txt.textContent = label;
+  d.appendChild(box); d.appendChild(txt);
+  d.addEventListener('click', () => {
+    const i = arr.indexOf(value);
+    if (i > -1) arr.splice(i, 1); else arr.push(value);
+    if (onChange) onChange();
+  });
+  return d;
+}
+
+// A question with `showIf` renders only when its controlling question holds the
+// stated value. Used so the publish-attribution fields appear the moment the
+// clearance box is ticked and stay out of the way otherwise.
+function isVisible(q) {
+  if (!q.showIf) return true;
+  const actual = answers[q.showIf.id];
+  return actual === q.showIf.equals;
+}
+
+function renderQuestion(q) {
+  const wrap = document.createElement('div');
+  wrap.className = 'q' + (q.showIf ? ' q-conditional' : '');
+
+  // A checkbox carries its own label, so no separate stem line.
+  if (q.type !== 'check') {
+    const stem = document.createElement('div');
+    stem.className = 'q-stem';
+    stem.textContent = q.stemText;
+    if (q.optional && q.type !== 'text' && q.type !== 'shorttext') {
+      const s = document.createElement('span');
+      s.className = 'q-optional';
+      s.textContent = '  (optional)';
+      stem.appendChild(s);
+    }
+    wrap.appendChild(stem);
+  }
+
+  if (q.hintText) {
+    const h = document.createElement('div');
+    h.className = 'q-hint';
+    h.textContent = q.hintText;
+    wrap.appendChild(h);
+  }
+
+  if (q.type === 'scale5') {
+    const labels = q.scaleOverride ? (q.scaleOverride[lang] || q.scaleOverride.en)
+                                   : (SURVEY.scale5[lang] || SURVEY.scale5.en);
+    const row = document.createElement('div');
+    row.className = 'scale';
+    labels.forEach((lbl, i) => {
+      const v = i + 1;
+      const item = document.createElement('div');
+      item.className = 'scale-item' + (answers[q.id] === v ? ' selected' : '');
+      item.innerHTML = '<div class="scale-num">' + v + '</div>';
+      const l = document.createElement('div');
+      l.className = 'scale-lbl';
+      l.textContent = lbl;
+      item.appendChild(l);
+      item.addEventListener('click', () => {
+        answers[q.id] = v;
+        row.querySelectorAll('.scale-item').forEach(x => x.classList.remove('selected'));
+        item.classList.add('selected');
+      });
+      row.appendChild(item);
+    });
+    wrap.appendChild(row);
+
+  } else if (q.type === 'choice' || q.type === 'yesno') {
+    const opts = q.choices[lang] || q.choices.en;
+    const row = document.createElement('div');
+    row.className = q.type === 'yesno' ? 'choice-row yesno-row' : 'choice-row';
+    if (q.type === 'yesno') row.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    opts.forEach(opt => {
+      const item = document.createElement('div');
+      item.className = 'choice-item' + (answers[q.id] === opt ? ' selected' : '');
+      item.textContent = opt;
+      item.addEventListener('click', () => {
+        answers[q.id] = opt;
+        row.querySelectorAll('.choice-item').forEach(x => x.classList.remove('selected'));
+        item.classList.add('selected');
+      });
+      row.appendChild(item);
+    });
+    wrap.appendChild(row);
+
+  } else if (q.type === 'nps') {
+    const row = document.createElement('div');
+    row.className = 'nps-row';
+    for (let v = 0; v <= 10; v++) {
+      const item = document.createElement('div');
+      item.className = 'nps-item' + (answers[q.id] === v ? ' selected' : '');
+      item.textContent = v;
+      item.addEventListener('click', () => {
+        answers[q.id] = v;
+        row.querySelectorAll('.nps-item').forEach(x => x.classList.remove('selected'));
+        item.classList.add('selected');
+      });
+      row.appendChild(item);
+    }
+    wrap.appendChild(row);
+    const anch = document.createElement('div');
+    anch.className = 'nps-anchors';
+    anch.innerHTML = '<span>' + t(q.anchorLow) + '</span><span>' + t(q.anchorHigh) + '</span>';
+    wrap.appendChild(anch);
+
+  } else if (q.type === 'multi') {
+    const box = document.createElement('div');
+    box.className = 'multi-options';
+    if (!Array.isArray(answers[q.id])) answers[q.id] = [];
+    SURVEY.modules.forEach(mod => {
+      box.appendChild(multiRow(mod.id, t(mod.label), answers[q.id], null));
+    });
+    wrap.appendChild(box);
+
+  } else if (q.type === 'check') {
+    const row = document.createElement('div');
+    const on = () => answers[q.id] === true;
+    row.className = 'check-row' + (on() ? ' selected' : '');
+    const box = document.createElement('span');
+    box.className = 'check-box';
+    box.textContent = on() ? '✓' : '';
+    const lbl = document.createElement('span');
+    lbl.className = 'check-label';
+    lbl.textContent = q.stemText;
+    row.appendChild(box); row.appendChild(lbl);
+    row.addEventListener('click', () => {
+      answers[q.id] = !on();
+      // Re-render the step so any showIf questions gated on this appear or go.
+      renderStep();
+    });
+    wrap.appendChild(row);
+
+  } else if (q.type === 'shorttext') {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.placeholder = q.placeholderText || '';
+    inp.value = answers[q.id] || '';
+    inp.style.marginBottom = '0';
+    inp.addEventListener('input', () => { answers[q.id] = inp.value; });
+    wrap.appendChild(inp);
+
+  } else if (q.type === 'text') {
+    const ta = document.createElement('textarea');
+    ta.placeholder = q.placeholderText || '';
+    ta.value = answers[q.id] || '';
+    ta.style.marginBottom = '0';
+    ta.addEventListener('input', () => { answers[q.id] = ta.value; });
+    wrap.appendChild(ta);
+  }
+
+  return wrap;
+}
+
+// ─── NAVIGATION ───────────────────────────────────────────────────────────────
+function validateStep() {
+  const step = steps[stepIdx];
+  if (step.kind === 'modules') return selectedModules.length > 0;
+  const FREE = ['text', 'shorttext', 'check'];
+  return step.questions
+    .filter(isVisible)
+    .every(q => q.optional || FREE.includes(q.type) || answers[q.id] !== undefined);
+}
+
+$('btn-next').addEventListener('click', () => {
+  if (!validateStep()) {
+    $('s-err').textContent = t(SURVEY.ui.errorRequired);
+    $('s-err').hidden = false;
+    return;
+  }
+  if (stepIdx < steps.length - 1) {
+    stepIdx++;
+    renderStep();
+  } else {
+    submitFeedback();
+  }
+});
+
+$('btn-back').addEventListener('click', () => {
+  if (stepIdx > 0) { stepIdx--; renderStep(); }
+  else { show('view-intro'); }
+});
+
+// ─── SUBMIT ───────────────────────────────────────────────────────────────────
+// Payload shape: flat `responses` array. Each entry carries the questionId, the
+// dimension it rolls up to (if any), the raw value, and the question stem in the
+// language the respondent actually saw. n8n aggregates by `dim` and writes the
+// stems straight into the vault record - no text matching, no lookup drift.
+function collectResponses() {
+  const out = [];
+  steps.forEach(step => {
+    if (step.kind === 'modules') return;
+    step.questions.forEach(q => {
+      // A question hidden behind an unticked showIf never counts, even if the
+      // respondent typed into it and then unticked the box. Otherwise an
+      // attribution name could travel with a submission whose clearance was
+      // withdrawn - the one mistake this block must not make.
+      if (!isVisible(q)) return;
+      const v = answers[q.id];
+      if (v === undefined || v === '' || v === false ||
+          (Array.isArray(v) && v.length === 0)) return;
+      out.push({
+        id: q.id,
+        moduleId: q.moduleId || null,
+        dim: q.dim || null,
+        type: q.type,
+        stem: q.stemText,
+        value: typeof v === 'string' ? v.trim() : v
+      });
+    });
+  });
+  return out;
+}
+
+async function submitFeedback() {
+  show('view-loading');
+
+  const payload = {
+    submissionId: 'fb_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    surveyVersion: SURVEY.version,
+    language: lang,
+    // sessionId is the grouping key. When present, n8n re-resolves it against
+    // the private registry and prefers that company name over the one below -
+    // so the ledger groups on a controlled value, never on typed free text.
+    sessionId: meta.sessionId || null,
+    sessionFromUrl: !!meta.sessionId,
+    context: meta.context,
+    company: meta.company,
+    engagementDate: meta.date,
+    name: meta.name || null,
+    email: meta.email || null,
+    role: meta.role || null,
+    modules: meta.context === 'workshop' ? selectedModules.slice() : (answers['rt_modules'] || []),
+    consent: meta.consent,
+    consentGivenAt: meta.consentGivenAt,
+    submittedAt: new Date().toISOString(),
+    responses: collectResponses()
+  };
+
+  try {
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    show('view-thanks');
+  } catch (err) {
+    console.error(err);
+    alert(t(SURVEY.ui.errorGeneric));
+    show('view-step');
+  }
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+// Deep links this form understands:
+//   ?lang=de&context=retainer&company=Acme          plain prefill
+//   ?session=<id>&co=<company>&d=<date>&m=<modules>  session QR
+//
+// The session parameters are display-only, and the only session this page ever
+// knows about is the one in its own URL. There is no registry in this file and
+// no request for one, so scanning a QR reveals nothing about any other client.
+(function boot() {
+  const params = new URLSearchParams(window.location.search);
+
+  const qLang = params.get('lang');
+  if (qLang && SURVEY.languages && SURVEY.languages.includes(qLang)) {
+    lang = qLang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === qLang));
+    document.documentElement.lang = qLang;
+  }
+
+  const qCtx = params.get('context');
+  if (qCtx === 'workshop' || qCtx === 'retainer') context = qCtx;
+
+  // test=1 only changes what the respondent sees. Whether a submission is
+  // actually treated as a test is decided server-side from the registry, so
+  // adding or removing this flag by hand cannot move a response between the
+  // real and test ledgers.
+  if (params.get('test') === '1') $('test-strip').hidden = false;
+
+  const qSession = params.get('session');
+  if (qSession) {
+    const mods = (params.get('m') || '')
+      .split(',')
+      .map(s => s.trim())
+      .filter(id => SURVEY.modules.some(m => m.id === id));   // ignore anything unknown
+    session = {
+      id: qSession,
+      company: params.get('co') || '',
+      date: params.get('d') || '',
+      context: (qCtx === 'workshop' || qCtx === 'retainer') ? qCtx : 'workshop',
+      modules: mods
+    };
+    context = session.context;
+  }
+
+  renderIntro();
+
+  const qCompany = params.get('company');
+  if (qCompany && !session) $('f-company').value = qCompany;
+})();
+</script>
+</body>
+</html>
